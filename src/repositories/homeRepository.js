@@ -5,13 +5,19 @@ const getAllTeams = async () => {
 };
 
 const getName = async (name) => {
-    return await connection.query(`SELECT * FROM "teams" WHERE name = $1`,[name]);
- };
+  return await connection.query(`SELECT * FROM "teams" WHERE name = $1`, [
+    name,
+  ]);
+};
 
- const postTeam = async (name, war_cry,year) => {
-    return await connection.query(
-      `INSERT INTO "teams" (name, war_cry, year) VALUES ($1, $2,$3);`,
-      [name, war_cry,year]
-    );
-  };
-export {getAllTeams, getName, postTeam}
+const postTeam = async (name, war_cry, year) => {
+  return await connection.query(
+    `INSERT INTO "teams" (name, war_cry, year) VALUES ($1, $2,$3);`,
+    [name, war_cry, year]
+  );
+};
+
+const finishChampionship = async () => {
+    return await connection.query(`DELETE FROM "teams"`);
+}
+export { getAllTeams, getName, postTeam, finishChampionship };
