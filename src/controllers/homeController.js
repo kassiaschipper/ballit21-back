@@ -34,8 +34,7 @@ async function insertTeams(req, res) {
       await homeRepository.postTeam(name, war_cry, year);
     } catch (error) {
       console.log(error);
-      console.log("erro no controller");
-      return res.sendStatus(500);
+       return res.sendStatus(500);
     }
   }
   return res.status(201).send({ message: "Times cadastrados" });

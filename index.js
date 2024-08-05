@@ -3,6 +3,7 @@ import cors from "cors";
 import dotenv from "dotenv";
 dotenv.config();
 import routerHome from "./src/routes/homeRoutes.js";
+import routerMatches from "./src/routes/matchesRoutes.js"
 
 const app = express();
 app.use(cors());
@@ -16,6 +17,7 @@ app.get("/status", (req, res) => {
 });
 
 app.use(routerHome);
+app.use(routerMatches);
 
 app.listen(port, () =>
   console.log(`Listening on port ${port}`)
