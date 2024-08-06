@@ -4,18 +4,24 @@ const getAllMatches = async () => {
   return await connection.query(`SELECT * FROM "matches"`);
 };
 
-const initMatch = async (teamAId, teamBId) => {
+const initMatch = async (teamAName, teamBName) => {
   return await connection.query(
-    `INSERT INTO "matches" ("teama_id","teamb_id") 
+    `INSERT INTO "matches" ("teama_name","teamb_name") 
         VALUES ($1,$2)`,
-    [teamAId, teamBId]
+    [teamAName, teamBName]
   );
 };
 
-const getPairs = async (teamAId, teamBId) => {
+const getPairs = async (teamAName, teamBName) => {
   return await connection.query(
-    `SELECT * FROM "matches" WHERE ("teama_id"= $1 AND "teamb_id"= $2) OR ("teama_id"= $2 AND "teamb_id"=$1);`,
-    [teamAId, teamBId]
+    `SELECT * FROM "matches" WHERE ("teama_name"= $1 AND "teamb_name"= $2) OR ("teama_name"= $2 AND "teamb_name"=$1);`,
+    [teamAName, teamBName]
   );
 };
-export { getAllMatches, initMatch, getPairs };
+
+const getIdByMatch = async(teamAName, teamBName) => {
+    return await connection.query(`Select id FROM "matches" WHERE ("teama_name"= $1 AND "teamb_name"= $2) OR ("teama_name"= $2 AND "teamb_name"=$1);`,
+    ["teamAName", "teamBName"]
+  );
+};
+export { getAllMatches, initMatch, getPairs, getIdByMatch };
