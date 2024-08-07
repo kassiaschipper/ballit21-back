@@ -12,7 +12,6 @@ async function getMatches(req, res) {
 
 async function insertMatch(req, res) {
   const objects = req.body;
-  console.log(objects)
 
   for (const match in objects) {
     const { teamA_name, teamB_name } = objects[match];
@@ -34,14 +33,28 @@ async function insertMatch(req, res) {
   }
 
   const matches = (await matchesRepository.getAllMatches()).rows;
-
-  // let ids = [];
- 
-  // for (const index in getId) {
-  //   const {id} = getId[index];
-  //   ids.push(id);   
-  // }
-  return res.status(201).send({ message: "Partida(s) cadastrada(s)", data: matches });
+  return res
+    .status(201)
+    .send({ message: "Partida(s) cadastrada(s)", data: matches });
 }
 
-export { getMatches, insertMatch };
+async function updateMatch(req, res) {
+  const match = req.body;
+
+  try {
+    const findMatch = (await matchesRepository.getMatchById(match.matchId)).rows;
+
+    if (findMatch.length > 0) {
+      await matchesRepository.putMatch(match);
+      let winner = (await matchesRepository.getWinnerById(match.matchId)).rows[0];
+      
+      return res.status(200).send({ message: "Partida atualizada", winner:winner});
+    }
+    return res.status(204).send({ message: "Partida não localizada" });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export { getMatches, insertMatch, updateMatch };
