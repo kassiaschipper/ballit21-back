@@ -42,13 +42,17 @@ async function updateMatch(req, res) {
   const match = req.body;
 
   try {
-    const findMatch = (await matchesRepository.getMatchById(match.matchId)).rows;
+    const findMatch = (await matchesRepository.getMatchById(match.matchId))
+      .rows;
 
     if (findMatch.length > 0) {
       await matchesRepository.putMatch(match);
-      let winner = (await matchesRepository.getWinnerById(match.matchId)).rows[0];
-      
-      return res.status(200).send({ message: "Partida atualizada", winner:winner});
+      let winner = (await matchesRepository.getWinnerById(match.matchId))
+        .rows[0];
+
+      return res
+        .status(200)
+        .send({ message: "Partida atualizada", winner: winner });
     }
     return res.status(204).send({ message: "Partida não localizada" });
   } catch (error) {
@@ -57,4 +61,43 @@ async function updateMatch(req, res) {
   }
 }
 
-export { getMatches, insertMatch, updateMatch };
+async function checkForWinners(req, res) {
+
+  try {
+    let noWinnerList = await matchesRepository.getMatchesWithNoWinner();
+    return res.status(200).send({ data: noWinnerList });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+async function getWinnersList(req, res) {
+  try {
+    let listOfWinners = (await matchesRepository.getWinners()).rows;
+    return res.status(200).send({data:listOfWinners});
+  }  catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+async function deleteMatches(req, res) {
+
+  try {
+    await matchesRepository.eraseMatchesData();
+    return res.status(200).send({ message: "Dados apagados" });
+  } catch (error) {
+    console.log(error);
+    return res.sendStatus(500);
+  }
+}
+
+export {
+  getMatches,
+  insertMatch,
+  updateMatch,
+  checkForWinners,
+  deleteMatches,
+  getWinnersList,
+};

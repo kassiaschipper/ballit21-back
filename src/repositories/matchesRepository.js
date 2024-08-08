@@ -30,9 +30,7 @@ const getMatchById = async (id) => {
   return await connection.query(`SELECT * FROM "matches" WHERE id=$1;`, [id]);
 };
 
-
 const putMatch = async (body) => {
-  
   return await connection.query(
     `UPDATE "matches" SET 
       "teama_blot" = $1, 
@@ -51,13 +49,32 @@ const putMatch = async (body) => {
       body.teamb_plif,
       body.teamb_punishment,
       body.winner,
-      body.matchId
+      body.matchId,
     ]
   );
 };
 
 const getWinnerById = async (id) => {
-  return await connection.query(`SELECT winner FROM matches WHERE id = $1;`,[id]);
+  return await connection.query(`SELECT winner FROM matches WHERE id = $1;`, [
+    id,
+  ]);
+};
+
+const getMatchesWithNoWinner = async () => {
+  let result = await connection.query(
+    `SELECT * FROM "matches" WHERE "winner" IS NULL`
+  );
+  return result.rowCount;
+};
+
+const eraseMatchesData = async () => {
+  let result = await connection.query(`DELETE FROM "matches"`);
+  return result;
+};
+
+const getWinners = async () => {
+  let result = await connection.query(`SELECT winner FROM "matches"`);
+  return result
 };
 
 export {
@@ -67,5 +84,8 @@ export {
   getIdByMatch,
   getMatchById,
   putMatch,
-  getWinnerById
+  getWinnerById,
+  getMatchesWithNoWinner,
+  eraseMatchesData,
+  getWinners,
 };
