@@ -77,6 +77,10 @@ const getWinners = async () => {
   return result
 };
 
+const deleteTeams = async() => {
+  return await connection.query(`DELETE FROM "teams"`);
+};
+
 export {
   getAllMatches,
   initMatch,
@@ -88,4 +92,5 @@ export {
   getMatchesWithNoWinner,
   eraseMatchesData,
   getWinners,
+  deleteTeams
 };

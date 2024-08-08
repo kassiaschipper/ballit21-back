@@ -93,6 +93,18 @@ async function deleteMatches(req, res) {
   }
 }
 
+async function deleteTable(req, res) {
+ 
+  try {
+    await matchesRepository.eraseMatchesData();
+    await matchesRepository.deleteTeams();
+
+    return res.status(200).send({message: "Dados limpos"});
+  } catch (error) {
+    return res.sendStatus(500);
+  }
+}
+
 export {
   getMatches,
   insertMatch,
@@ -100,4 +112,5 @@ export {
   checkForWinners,
   deleteMatches,
   getWinnersList,
+  deleteTable
 };
